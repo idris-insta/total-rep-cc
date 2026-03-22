@@ -1,0 +1,77 @@
+{
+  "summary": "Iteration 5 - 6 PILLARS CORE ENGINE: All backend APIs (15/15 tests) and frontend UI components working. Fixed route ordering bug in /api/core/buying-dna/late-customers endpoint.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/tests/test_core_engine_pillars.py",
+    "/app/test_reports/pytest/pytest_results_iteration5.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [],
+  "updated_files": [
+    "/app/backend/routes/core_engine.py",
+    "/app/tests/test_core_engine_pillars.py"
+  ],
+  "success_rate": {
+    "backend": "100% (15/15 tests passed)",
+    "frontend": "100% - All 6 pillars UI working"
+  },
+  "test_credentials": {
+    "email": "admin@instabiz.com",
+    "password": "adminpassword"
+  },
+  "seed_data_creation": "None - used existing test data",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "All 6 Pillars of AdhesiveFlow ERP tested and working: 1) Physics Engine - KG/SQM/PCS/MTR conversions working (100 KG = 2717.391 SQM), 2) Production Redline - 7% scrap limit with override queue (WO-20260106-74CF10 at 8%), 3) CRM Buying DNA - Late customer detection working, 4) Multi-Branch Ledger - GST Bridge summary working, 5) Import Bridge - Landed cost calculator working (₹11,85,398 total for $10K FOB), 6) Director Cockpit - All 4 pulse cards and 4 tabs working.",
+  "features_tested": {
+    "physics_engine": {
+      "status": "PASS",
+      "api": "/api/core/physics/convert",
+      "details": "KG↔SQM↔PCS↔MTR conversions working. 100 KG = 2717.391 SQM with default tape specs (40µm, 48mm, 65m)"
+    },
+    "production_redline": {
+      "status": "PASS",
+      "api": "/api/core/redline/check-entry",
+      "details": "7% scrap limit enforced. Override queue shows 1 pending (WO-20260106-74CF10 at 8%)"
+    },
+    "buying_dna": {
+      "status": "PASS",
+      "api": "/api/core/buying-dna/late-customers",
+      "details": "Late customer detection working. Currently shows 'All Customers On Schedule'"
+    },
+    "gst_bridge": {
+      "status": "PASS",
+      "api": "/api/core/gst-bridge/summary",
+      "details": "Multi-branch GST summary with consolidated view and net payable calculation"
+    },
+    "import_bridge": {
+      "status": "PASS",
+      "api": "/api/core/import-bridge/landed-cost",
+      "details": "Landed cost calculator working. $10K FOB = ₹11,85,398 total, ₹1,185/KG, MSP ₹1,363 (15%), RSP ₹1,482 (25%)"
+    },
+    "director_cockpit": {
+      "status": "PASS",
+      "api": "/api/core/cockpit/pulse",
+      "details": "4 pulse cards (Cash, Production, Sales, Override Queue) + 4 tabs (Redline, Physics, Buying DNA, Import Bridge)"
+    },
+    "customization_page": {
+      "status": "PASS",
+      "url": "/customization",
+      "details": "Page loads with Custom Fields, Report Builder, Email Templates, Notifications, API Access, Data Import/Export"
+    }
+  },
+  "bug_fixed": {
+    "file": "/app/backend/routes/core_engine.py",
+    "issue": "Route ordering bug - /buying-dna/late-customers was being matched by /buying-dna/{customer_id}",
+    "fix": "Moved static route /buying-dna/late-customers before dynamic route /buying-dna/{customer_id}",
+    "root_cause": "FastAPI matches routes in order, so dynamic route was catching 'late-customers' as customer_id"
+  }
+}
