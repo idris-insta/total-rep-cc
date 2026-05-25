@@ -1,6 +1,20 @@
 """
 SQLAlchemy Entity Models Package
 All database models for PostgreSQL
+
+Load order matters for FK resolution:
+  1. base / other (User, Branch, ChartOfAccounts)
+  2. inventory (Item, Warehouse)
+  3. accounts (Invoice, JournalEntry)
+  4. procurement (PurchaseOrder, GRN)
+  5. hrms (Employee, LeaveType, SalaryStructure)
+  6. production (Machine, WorkOrder)
+  7. dimensional_gl (CostCenter, Project, ProductLine, GeneralLedger)
+  8. item_variants (ItemSKUTemplate, ItemVariant)
+  9. manufacturing_physics (BOM, CoatingOrder, JumboRoll, SlittingOrder)
+ 10. hrms_extended (LeaveBalance, PayrollRun, FixedAsset, ...)
+ 11. procurement_full (PurchaseIndent, GoodsReceivedNote, PurchaseInvoice, ...)
+ 12. ai_agents (AIAgent, BuyingDNAProfile, DocumentCapture, ...)
 """
 
 # Base and User models
@@ -105,6 +119,80 @@ from models.entities.other import (
     CustomReport
 )
 
+# ── NEW PHASE-1 MODULES ──────────────────────────────────────────────────────
+
+# Dimensional GL (CostCenter, Project, ProductLine, GeneralLedger, FiscalYear,
+#                  BudgetAllocation, ApprovalWorkflow)
+from models.entities.dimensional_gl import (
+    CostCenter,
+    Project,
+    ProductLine,
+    GeneralLedger,
+    FiscalYear,
+    BudgetAllocation,
+    ApprovalWorkflow,
+)
+
+# SKU Templates, Variants, Multi-UOM, Price Lists
+from models.entities.item_variants import (
+    ItemGroup,
+    UOMConversion,
+    ItemUOMProfile,
+    ItemSKUTemplate,
+    ItemVariant,
+    PriceList,
+    PriceListItem,
+)
+
+# Manufacturing Physics Engine
+from models.entities.manufacturing_physics import (
+    BillOfMaterials,
+    BOMItem,
+    AdhesiveMixFormula,
+    CoatingOrder,
+    JumboRoll,
+    SlittingOrder,
+    ProductionShiftLog,
+    ScrapEntry,
+)
+
+# HRMS Extended + Fixed Assets
+from models.entities.hrms_extended import (
+    LeaveBalance,
+    LeaveApplication,
+    ShiftMaster,
+    EmployeeShiftRoster,
+    AttendanceRecord,
+    EmployeeSalaryAssignment,
+    PayrollRun,
+    PayslipEntry,
+    EmployeeLoan,
+    AssetCategory,
+    FixedAsset,
+    AssetDepreciationEntry,
+)
+
+# Full Procurement Chain
+from models.entities.procurement_full import (
+    PurchaseIndent,
+    PurchaseEnquiry,
+    VendorQuotation,
+    GoodsReceivedNote,
+    PurchaseInvoice,
+    LandedCostVoucher,
+)
+
+# AI Agent Layer
+from models.entities.ai_agents import (
+    AIAgent,
+    AgentRunLog,
+    TaskEscalation,
+    BuyingDNAProfile,
+    ReorderAlert,
+    DocumentCapture,
+    AIInsight,
+)
+
 __all__ = [
     # Base
     'Base', 'UUIDMixin', 'TimestampMixin',
@@ -138,6 +226,29 @@ __all__ = [
     'EInvoice', 'EWayBill', 'Transporter',
     # Delivery
     'Gatepass', 'DeliveryChallan',
-    # AI
+    # AI (legacy)
     'AIQuery', 'CustomReport',
+    # ── Phase 1: Dimensional GL ──────────────────────────────────────────
+    'CostCenter', 'Project', 'ProductLine',
+    'GeneralLedger', 'FiscalYear', 'BudgetAllocation', 'ApprovalWorkflow',
+    # ── Phase 1: SKU & Multi-UOM ─────────────────────────────────────────
+    'ItemGroup', 'UOMConversion', 'ItemUOMProfile',
+    'ItemSKUTemplate', 'ItemVariant',
+    'PriceList', 'PriceListItem',
+    # ── Phase 1: Manufacturing Physics ───────────────────────────────────
+    'BillOfMaterials', 'BOMItem', 'AdhesiveMixFormula',
+    'CoatingOrder', 'JumboRoll',
+    'SlittingOrder', 'ProductionShiftLog', 'ScrapEntry',
+    # ── Phase 1: HRMS Extended + Assets ──────────────────────────────────
+    'LeaveBalance', 'LeaveApplication',
+    'ShiftMaster', 'EmployeeShiftRoster', 'AttendanceRecord',
+    'EmployeeSalaryAssignment', 'PayrollRun', 'PayslipEntry', 'EmployeeLoan',
+    'AssetCategory', 'FixedAsset', 'AssetDepreciationEntry',
+    # ── Phase 1: Full Procurement Chain ──────────────────────────────────
+    'PurchaseIndent', 'PurchaseEnquiry', 'VendorQuotation',
+    'GoodsReceivedNote', 'PurchaseInvoice', 'LandedCostVoucher',
+    # ── Phase 1: AI Agent Layer ───────────────────────────────────────────
+    'AIAgent', 'AgentRunLog', 'TaskEscalation',
+    'BuyingDNAProfile', 'ReorderAlert',
+    'DocumentCapture', 'AIInsight',
 ]
