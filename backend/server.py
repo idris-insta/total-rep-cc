@@ -297,6 +297,11 @@ async def dashboard_ai_insights(current_user: dict = Depends(get_current_user)):
         ]
     }
 
+@api_router.get("/health")
+async def health_check():
+    """Liveness probe for Docker / load balancers"""
+    return {"status": "ok", "version": settings.APP_VERSION}
+
 app.include_router(api_router)
 
 app.add_middleware(
